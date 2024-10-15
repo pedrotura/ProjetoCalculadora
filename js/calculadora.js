@@ -14,6 +14,7 @@ let reset = false;
 
 writeResult();
 clearNumber();
+pressOperationButton();
 
 function writeResult() {
     btnNumbers.forEach((number) => {
@@ -38,4 +39,34 @@ function clearNumber() {
         previous.textContent = null;
         previousValue = 0;
     });
+}
+
+function pressOperationButton() {
+    btnOperations.forEach((operation) => {
+        operation.addEventListener('click', () => {
+            if (!previous.textContent) {
+                previous.textContent = `${resultValue} ${operation.textContent}`;
+            } else {
+                performOperation(operation);
+                resultValue = parseFloat(result.textContent);
+                previous.textContent = `${resultValue} ${operation.textContent}`;
+            }
+            previousValue = resultValue;
+            reset = true;
+        });
+    })
+}
+
+function performOperation(btnId) {
+    if (!previous.textContent) {
+        previous.textContent = `${resultValue} ${btnId.textContent}`;
+    } else if (previous.textContent.endsWith('+')) {
+        result.textContent = previousValue + resultValue;
+    } else if (previous.textContent.endsWith('−')) {
+        result.textContent = previousValue - resultValue;
+    } else if (previous.textContent.endsWith('×')) {
+        result.textContent = previousValue * resultValue;
+    } else if (previous.textContent.endsWith('÷')) {
+        result.textContent = previousValue / resultValue;
+    }
 }
