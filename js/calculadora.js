@@ -13,6 +13,7 @@ let resultValue = 0;
 let reset = false;
 
 writeResult();
+clearNumber();
 
 function writeResult() {
     btnNumbers.forEach((number) => {
@@ -26,5 +27,15 @@ function writeResult() {
             resultValue = parseFloat(result.textContent);
             console.log(resultValue);
         });
+    });
+}
+
+
+function clearNumber() {
+    btnClear.addEventListener('click', () => {
+        result.textContent = '0';
+        resultValue = 0;
+        previous.textContent = null;
+        previousValue = 0;
     });
 }
