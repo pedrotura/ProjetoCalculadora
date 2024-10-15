@@ -2,6 +2,7 @@ const btnNumbers = document.querySelectorAll('.button-number');
 const btnOperations = document.querySelectorAll('.button-operation');
 
 const btnClear = document.querySelector('#btnClear');
+const btnDelete = document.querySelector('#btnDelete');
 const btnEquals = document.querySelector('#btnEquals');
 
 const previous = document.querySelector('#previous');
@@ -14,6 +15,7 @@ let reset = false;
 
 writeResult();
 clearNumber();
+deleteNumber();
 pressOperationButton();
 pressEqualsButton();
 
@@ -39,6 +41,21 @@ function clearNumber() {
         resultValue = 0;
         previous.textContent = null;
         previousValue = 0;
+    });
+}
+
+function deleteNumber() {
+    btnDelete.addEventListener('click', () => {
+        if (result.textContent != 0) {
+            result.textContent = result.textContent.substring(0, result.textContent.length - 1);
+            resultValue = parseFloat(result.textContent);
+        }
+
+        if (!result.textContent) {
+            result.textContent = '0';
+            resultValue = 0;
+        }
+        console.log(resultValue);
     });
 }
 
