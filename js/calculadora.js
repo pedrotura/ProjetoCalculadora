@@ -22,18 +22,20 @@ pressEqualsButton();
 function writeResult() {
     btnNumbers.forEach((number) => {
         number.addEventListener('click', () => {
-            if (result.textContent != 0 && !reset) {
-                result.textContent += number.textContent;
-            } else {
-                result.textContent = number.textContent;
-                reset = false;
+            if (result.textContent.length != 10 || reset) {
+                if (result.textContent != 0 && !reset) {
+                    result.textContent += number.textContent;
+                } else {
+                    result.textContent = number.textContent;
+                    reset = false;
+                }
+                resultValue = parseFloat(result.textContent);
             }
-            resultValue = parseFloat(result.textContent);
+            console.log(result.textContent.length);
             console.log(resultValue);
         });
     });
 }
-
 
 function clearNumber() {
     btnClear.addEventListener('click', () => {
