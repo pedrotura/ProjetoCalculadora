@@ -1,6 +1,7 @@
 const btnNumbers = document.querySelectorAll('.button-number');
 const btnOperations = document.querySelectorAll('.button-operation');
 
+const btnPercentage = document.querySelector('#btnPercentage');
 const btnFactorial = document.querySelector('#btnFactorial');
 const btnSquare = document.querySelector('#btnSquare');
 const btnSquareRoot = document.querySelector('#btnSquareRoot');
@@ -22,6 +23,7 @@ clearNumber();
 deleteNumber();
 pressOperationButton();
 pressEqualsButton();
+pressPercentageButton();
 pressFactorialButton();
 pressSquareButton();
 pressSquareRootButton();
@@ -55,14 +57,16 @@ function clearNumber() {
 
 function deleteNumber() {
     btnDelete.addEventListener('click', () => {
-        if (result.textContent != 0) {
-            result.textContent = result.textContent.substring(0, result.textContent.length - 1);
-            resultValue = parseFloat(result.textContent);
-        }
+        if (!reset) {
+            if (result.textContent != 0) {
+                result.textContent = result.textContent.substring(0, result.textContent.length - 1);
+                resultValue = parseFloat(result.textContent);
+            }
 
-        if (!result.textContent) {
-            result.textContent = '0';
-            resultValue = 0;
+            if (!result.textContent) {
+                result.textContent = '0';
+                resultValue = 0;
+            }
         }
         console.log(resultValue);
     });
@@ -117,6 +121,8 @@ function performOperation(btnId) {
         result.textContent = previousValue * resultValue;
     } else if (previous.textContent.includes('÷')) {
         result.textContent = previousValue / resultValue;
+    } else if (previous.textContent.includes('%')) {
+        performPercentageOperation();
     } else if (previous.textContent.includes('!')) {
         performFactorialOperation();
     } else if (previous.textContent.includes('²')) {
@@ -124,6 +130,20 @@ function performOperation(btnId) {
     } else if (previous.textContent.includes('√')) {
         performSquareRootOperation();
     }
+}
+
+function pressPercentageButton() {
+    btnPercentage.addEventListener('click', () => {
+        performPercentageOperation();
+    });
+}
+
+function performPercentageOperation() {
+    previousValue = resultValue;
+    previous.textContent = `${previousValue}% =`;
+    resultValue /= 100;
+    result.textContent = resultValue;
+    reset = true;
 }
 
 function pressFactorialButton() {
