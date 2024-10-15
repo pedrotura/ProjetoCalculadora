@@ -52,7 +52,7 @@ body {
 }
 
 .calculator-previous {
-    color: gray;
+    color: var(--equals-color);
     font-size: 14px;
     user-select: none;
     margin-bottom: 5px;

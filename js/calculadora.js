@@ -8,6 +8,7 @@ const btnSquareRoot = document.querySelector('#btnSquareRoot');
 
 const btnClear = document.querySelector('#btnClear');
 const btnDelete = document.querySelector('#btnDelete');
+const btnDecimal = document.querySelector('#btnDecimal');
 const btnEquals = document.querySelector('#btnEquals');
 
 const previous = document.querySelector('#previous');
@@ -22,6 +23,7 @@ writeResult();
 clearNumber();
 deleteNumber();
 pressOperationButton();
+pressDecimalButton();
 pressEqualsButton();
 pressPercentageButton();
 pressFactorialButton();
@@ -32,7 +34,7 @@ function writeResult() {
     btnNumbers.forEach((number) => {
         number.addEventListener('click', () => {
             if (result.textContent.length != 10 || reset) {
-                if (result.textContent != 0 && !reset) {
+                if (result.textContent !== '0' && !reset) {
                     result.textContent += number.textContent;
                 } else {
                     result.textContent = number.textContent;
@@ -91,6 +93,14 @@ function pressOperationButton() {
 
 }
 
+function pressDecimalButton() {
+    btnDecimal.addEventListener('click', () => {
+        if (!result.textContent.includes('.')) {
+            result.textContent += '.';
+        }
+    });
+}
+
 function pressEqualsButton() {
     btnEquals.addEventListener('click', () => {
 
@@ -98,7 +108,7 @@ function pressEqualsButton() {
             previous.textContent += `${resultValue} =`;
         } else if (previous.textContent.endsWith('=')) {
             previousValue = parseFloat(result.textContent);
-            previous.textContent = previous.textContent.replace(/(\d+) (\D)/, `${previousValue} $2`);
+            previous.textContent = previous.textContent.replace(/(\d+\.?\d*) (\D)/, `${previousValue} $2`);
             performOperation(btnEquals);
         } else {
             performOperation(btnEquals);
