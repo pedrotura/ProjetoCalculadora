@@ -56,17 +56,26 @@ function pressOperationButton() {
             reset = true;
         });
     })
+
+    alert('previous: ' + previousValue + ', result: ' + resultValue)
+
 }
 
 function pressEqualsButton() {
     btnEquals.addEventListener('click', () => {
-        performOperation(btnEquals);
 
-        if (previous.textContent.endsWith('=')) {
-            previousValue = resultValue;
+        if (!previous.textContent) {
+            previous.textContent += `${resultValue} =`;
+        } else if (previous.textContent.endsWith('=')) {
+            previousValue = parseFloat(result.textContent);
+            previous.textContent = previous.textContent.replace(/(\d+) (\D)/, `${previousValue} $2`);
+            performOperation(btnEquals);
         } else {
+            performOperation(btnEquals);
             previous.textContent += ` ${resultValue} =`;
         }
+
+        alert('previous: ' + previousValue + ', result: ' + resultValue)
 
     });
 }
@@ -74,13 +83,13 @@ function pressEqualsButton() {
 function performOperation(btnId) {
     if (!previous.textContent) {
         previous.textContent = `${resultValue} ${btnId.textContent}`;
-    } else if (previous.textContent.endsWith('+')) {
+    } else if (previous.textContent.includes('+')) {
         result.textContent = previousValue + resultValue;
-    } else if (previous.textContent.endsWith('−')) {
+    } else if (previous.textContent.includes('-')) {
         result.textContent = previousValue - resultValue;
-    } else if (previous.textContent.endsWith('×')) {
+    } else if (previous.textContent.includes('×')) {
         result.textContent = previousValue * resultValue;
-    } else if (previous.textContent.endsWith('÷')) {
+    } else if (previous.textContent.includes('÷')) {
         result.textContent = previousValue / resultValue;
     }
 }
