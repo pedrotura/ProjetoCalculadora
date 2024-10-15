@@ -10,37 +10,39 @@
     <main class="page">
         <div class="calculator">
             <div class="calculator-screen">
-                <p>0</p>
+                <p class="calculator-previous" id="previous"></p>
+                <p class="calculator-result" id="result">0</p>
             </div>
             <div class="calculator-wrapper">
                 <div class="calculator-body">
-                    <div class="calculator-button"><button>%</button></div>
-                    <div class="calculator-button"><button>CE</button></div>
-                    <div class="calculator-button"><button>C</button></div>
+                    <div class="calculator-button"><button id="btnPercentage">%</button></div>
+                    <div class="calculator-button"><button id="btnClearEntry">CE</button></div>
+                    <div class="calculator-button"><button id="btnClear">C</button></div>
                     <div class="calculator-button"><button>|</button></div>
                     <div class="calculator-button"><button>|</button></div>
                     <div class="calculator-button"><button>|</button></div>
                     <div class="calculator-button"><button>|</button></div>
-                    <div class="calculator-button"><button>÷</button></div>
-                    <div class="calculator-button"><button>7</button></div>
-                    <div class="calculator-button"><button>8</button></div>
-                    <div class="calculator-button"><button>9</button></div>
-                    <div class="calculator-button"><button>×</button></div>
-                    <div class="calculator-button"><button>4</button></div>
-                    <div class="calculator-button"><button>5</button></div>
-                    <div class="calculator-button"><button>6</button></div>
-                    <div class="calculator-button"><button>−</button></div>
-                    <div class="calculator-button"><button>1</button></div>
-                    <div class="calculator-button"><button>2</button></div>
-                    <div class="calculator-button"><button>3</button></div>
-                    <div class="calculator-button"><button>+</button></div>
+                    <div class="calculator-button"><button class="button-operation" id="btnDivision">÷</button></div>
+                    <div class="calculator-button"><button class="button-number">7</button></div>
+                    <div class="calculator-button"><button class="button-number">8</button></div>
+                    <div class="calculator-button"><button class="button-number">9</button></div>
+                    <div class="calculator-button"><button class="button-operation">×</button></div>
+                    <div class="calculator-button"><button class="button-number">4</button></div>
+                    <div class="calculator-button"><button class="button-number">5</button></div>
+                    <div class="calculator-button"><button class="button-number">6</button></div>
+                    <div class="calculator-button"><button class="button-operation">-</button></div>
+                    <div class="calculator-button"><button class="button-number">1</button></div>
+                    <div class="calculator-button"><button class="button-number">2</button></div>
+                    <div class="calculator-button"><button class="button-number">3</button></div>
+                    <div class="calculator-button"><button class="button-operation">+</button></div>
                     <div class="calculator-button"><button>|</button></div>
-                    <div class="calculator-button"><button>0</button></div>
-                    <div class="calculator-button"><button>,</button></div>
-                    <div class="calculator-button"><button>=</button></div>
+                    <div class="calculator-button"><button class="button-number" id="btnZero">0</button></div>
+                    <div class="calculator-button"><button id="btnDecimal">,</button></div>
+                    <div class="calculator-button"><button id="btnEquals">=</button></div>
                 </div>
             </div>
         </div>
-    </main>    
+    </main>
+    <script src="./js/calculadora.js"></script>
 </body>
 </html>

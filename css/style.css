@@ -36,15 +36,26 @@ body {
 .calculator-screen {
     height: 40%;
     display: flex;
+    flex-direction: column;
     align-items: end;
     justify-content: end;
 }
 
 .calculator-screen p {
+    text-align: end;
+    margin-right: 15px;
+}
+
+.calculator-previous {
+    color: gray;
+    font-size: 14px;
+    margin-bottom: 5px;;
+}
+
+.calculator-result {
     color: var(--text-color);
     font-size: 48px;
-    text-align: end;
-    margin: 0 0.3em 0.3em 0;
+    margin-bottom: 10px;
 }
 
 .calculator-wrapper {
