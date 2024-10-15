@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Math&display=swap');
+
+:root {
+    --background-color: linear-gradient(45deg, #dfdfdf, #F8F6F6);
+    --text-color: #F8F6F6;
+    --calculator-color: #1d1d2b;
+    --primary-color: #CF4647;
+    --secondary-color: #F5D061;
+    --primary-font: 'Noto Sans Math', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--primary-font);
+    background: var(--background-color);
+}
+
+.page {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.calculator {
+    width: 20%;
+    height: 70%;
+    border-radius: 0.5em;
+    background-color: var(--calculator-color);
+}
+
+.calculator-screen {
+    height: 40%;
+    display: flex;
+    align-items: end;
+    justify-content: end;
+}
+
+.calculator-screen p {
+    color: var(--text-color);
+    font-size: 48px;
+    text-align: end;
+    margin: 0 0.3em 0.3em 0;
+}
+
+.calculator-wrapper {
+    height: 60%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.calculator-body {
+    width: 100%;
+    height: 100%;
+    margin: 0 0.5em 1em 0.5em;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 0.5em;
+}
+
+.calculator-button button {
+    width: 100%;
+    height: 100%;
+    font-size: 17px;
+    color: var(--text-color);
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 0.2em;
+}
+
+.calculator-button button:hover {
+    transition: .05s;
+    background-color: #9c3d3d;
+}
