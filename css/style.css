@@ -10,6 +10,10 @@
     --primary-font: 'Noto Sans Math', sans-serif;
 }
 
+::selection {
+    background-color: var(--primary-color);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -83,6 +87,7 @@ body {
     color: var(--text-color);
     border: none;
     border-radius: 0.2em;
+    user-select: none;
 }
 
 .calculator-button button:hover {

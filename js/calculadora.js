@@ -1,6 +1,10 @@
 const btnNumbers = document.querySelectorAll('.button-number');
 const btnOperations = document.querySelectorAll('.button-operation');
 
+const btnFactorial = document.querySelector('#btnFactorial');
+const btnSquare = document.querySelector('#btnSquare');
+const btnSquareRoot = document.querySelector('#btnSquareRoot');
+
 const btnClear = document.querySelector('#btnClear');
 const btnDelete = document.querySelector('#btnDelete');
 const btnEquals = document.querySelector('#btnEquals');
@@ -18,6 +22,9 @@ clearNumber();
 deleteNumber();
 pressOperationButton();
 pressEqualsButton();
+pressFactorialButton();
+pressSquareButton();
+pressSquareRootButton();
 
 function writeResult() {
     btnNumbers.forEach((number) => {
@@ -110,5 +117,64 @@ function performOperation(btnId) {
         result.textContent = previousValue * resultValue;
     } else if (previous.textContent.includes('÷')) {
         result.textContent = previousValue / resultValue;
+    } else if (previous.textContent.includes('!')) {
+        performFactorialOperation();
+    } else if (previous.textContent.includes('²')) {
+        performSquareOperation();
+    } else if (previous.textContent.includes('√')) {
+        performSquareRootOperation();
     }
+}
+
+function pressFactorialButton() {
+    btnFactorial.addEventListener('click', () => {
+       performFactorialOperation(); 
+    });
+}
+
+function performFactorialOperation() {
+    previousValue = resultValue;
+    previous.textContent = `${previousValue}! =`;
+    resultValue = calculateFactorial(resultValue);
+    result.textContent = resultValue;
+    reset = true;
+}
+
+function pressSquareButton() {
+    btnSquare.addEventListener('click', () => {
+        performSquareOperation();
+    });
+}
+
+function performSquareOperation() {
+    previousValue = resultValue;
+    previous.textContent = `${previousValue}² =`;
+    resultValue *= resultValue;
+    result.textContent = resultValue;
+    reset = true;
+}
+
+function pressSquareRootButton() {
+    btnSquareRoot.addEventListener('click', () => {
+        performSquareRootOperation();
+    });
+}
+
+function performSquareRootOperation() {
+    previousValue = resultValue;
+    previous.textContent = `√(${previousValue}) =`;
+    resultValue = Math.sqrt(resultValue);
+    result.textContent = resultValue;
+    reset = true;
+}
+
+function calculateFactorial(number) {
+    
+    let factorial = 1;
+    
+    for (let i = 1; i <= number; i++) {
+        factorial *= i;
+    }
+    return factorial;
+
 }
