@@ -15,6 +15,7 @@ let reset = false;
 writeResult();
 clearNumber();
 pressOperationButton();
+pressEqualsButton();
 
 function writeResult() {
     btnNumbers.forEach((number) => {
@@ -55,6 +56,19 @@ function pressOperationButton() {
             reset = true;
         });
     })
+}
+
+function pressEqualsButton() {
+    btnEquals.addEventListener('click', () => {
+        performOperation(btnEquals);
+
+        if (previous.textContent.endsWith('=')) {
+            previousValue = resultValue;
+        } else {
+            previous.textContent += ` ${resultValue} =`;
+        }
+
+    });
 }
 
 function performOperation(btnId) {
