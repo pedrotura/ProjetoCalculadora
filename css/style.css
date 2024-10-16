@@ -32,7 +32,7 @@ body {
 }
 
 .calculator {
-    width: 22%;
+    width: 22.5%;
     height: 80%;
     border-radius: 0.5em;
     background-color: var(--calculator-color);
@@ -61,6 +61,7 @@ body {
 .calculator-result {
     color: var(--text-color);
     font-size: 48px;
+    font-weight: 600;
     margin-bottom: 10px;
 }
 
@@ -92,6 +93,10 @@ body {
 
 .calculator-button button:hover {
     transition: .05s;
+}
+
+.calculator-button button:focus {
+    outline: none;
 }
 
 .button-number {

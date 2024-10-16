@@ -1,3 +1,5 @@
+const buttons = document.querySelectorAll('button');
+
 const btnNumbers = document.querySelectorAll('.button-number');
 const btnOperations = document.querySelectorAll('.button-operation');
 
@@ -18,11 +20,15 @@ const result = document.querySelector('#result');
 let previousValue = 0;
 let resultValue = 0;
 
+let fontSize = 48;
 let reset = false;
 
-writeResult();
-clearNumber();
-deleteNumber();
+const MAXIMUM_NUMBER_OF_DIGITS = 16;
+
+executeKeyCommands();
+formatScreen();
+pressClearButton();
+pressDeleteButton();
 pressOperationButton();
 pressSignButton();
 pressDecimalButton();
@@ -32,48 +38,77 @@ pressFactorialButton();
 pressSquareButton();
 pressSquareRootButton();
 
-function writeResult() {
+function executeKeyCommands() {
+    addEventListener('keydown', (event) => {
+        event.preventDefault();
+
+        switch (event.key) {
+            case 'Escape':
+                clearNumber();
+                break;
+            case 'Backspace':
+                deleteNumber();
+                break;
+            case 'Enter':
+                performEqualsOperation();
+                break;
+        }
+    });
+}
+
+function formatScreen() {
     btnNumbers.forEach((number) => {
         number.addEventListener('click', () => {
-            if (result.textContent.length != 10 || reset) {
-                if (result.textContent !== '0' && !reset) {
-                    result.textContent += number.textContent;
-                } else {
-                    result.textContent = number.textContent;
-                    reset = false;
-                }
-                resultValue = parseFloat(result.textContent);
+            if (result.textContent.length < MAXIMUM_NUMBER_OF_DIGITS) {
+                writeResult(number);
             }
-            console.log(result.textContent.length);
-            console.log(resultValue);
         });
     });
 }
 
-function clearNumber() {
+function writeResult(number) {
+    if (result.textContent !== '0' && !reset) {
+        result.textContent += number.textContent;
+    } else {
+        result.textContent = number.textContent;
+        reset = false;
+    }
+    resultValue = parseFloat(result.textContent);
+    console.log(result.textContent.length);
+    console.log(resultValue);
+}
+
+function pressClearButton() {
     btnClear.addEventListener('click', () => {
-        result.textContent = '0';
-        resultValue = 0;
-        previous.textContent = null;
-        previousValue = 0;
+        clearNumber();
+    });
+}
+
+function clearNumber() {
+    result.textContent = '0';
+    resultValue = 0;
+    previous.textContent = null;
+    previousValue = 0;
+}
+
+function pressDeleteButton() {
+    btnDelete.addEventListener('click', () => {
+        deleteNumber();
     });
 }
 
 function deleteNumber() {
-    btnDelete.addEventListener('click', () => {
-        if (!reset) {
-            if (result.textContent !== '0') {
-                result.textContent = result.textContent.substring(0, result.textContent.length - 1);
-                resultValue = parseFloat(result.textContent);
-            }
-
-            if (!result.textContent) {
-                result.textContent = '0';
-                resultValue = 0;
-            }
+    if (!reset) {
+        if (result.textContent !== '0') {
+            result.textContent = result.textContent.substring(0, result.textContent.length - 1);
+            resultValue = parseFloat(result.textContent);
         }
-        console.log(resultValue);
-    });
+
+        if (!result.textContent) {
+            result.textContent = '0';
+            resultValue = 0;
+        }
+    }
 }
 
 function pressOperationButton() {
@@ -122,21 +157,21 @@ function pressDecimalButton() {
 
 function pressEqualsButton() {
     btnEquals.addEventListener('click', () => {
-
-        if (!previous.textContent) {
-            previous.textContent += `${resultValue} =`;
-        } else if (previous.textContent.endsWith('=')) {
-            previousValue = parseFloat(result.textContent);
-            previous.textContent = previous.textContent.replace(/(\-?\d+\.?\d*) (\D)/, `${previousValue} $2`);
-            performOperation(btnEquals);
-        } else {
-            performOperation(btnEquals);
-            previous.textContent += ` ${resultValue} =`;
-        }
-
-        alert('previous: ' + previousValue + ', result: ' + resultValue)
-
+        performEqualsOperation();
     });
+}
+
+function performEqualsOperation() {
+    if (!previous.textContent) {
+        previous.textContent += `${resultValue} =`;
+    } else if (previous.textContent.endsWith('=')) {
+        previousValue = parseFloat(result.textContent);
+        previous.textContent = previous.textContent.replace(/(\-?\d+\.?\d*) (\D)/, `${previousValue} $2`);
+        performOperation(btnEquals);
+    } else {
+        performOperation(btnEquals);
+        previous.textContent += ` ${resultValue} =`;
+    }
 }
 
 function performOperation(btnId) {
@@ -149,7 +184,7 @@ function performOperation(btnId) {
     } else if (previous.textContent.includes('×')) {
         result.textContent = previousValue * resultValue;
     } else if (previous.textContent.includes('÷')) {
-        result.textContent = previousValue / resultValue;
+        result.textContent = roundNumber(previousValue / resultValue, MAXIMUM_NUMBER_OF_DIGITS - Math.round(previousValue / resultValue).toString().length);
     } else if (previous.textContent.includes('%')) {
         performPercentageOperation();
     } else if (previous.textContent.includes('!')) {
@@ -217,13 +252,15 @@ function performSquareRootOperation() {
     reset = true;
 }
 
-function calculateFactorial(number) {
-    
+function calculateFactorial(number) { 
     let factorial = 1;
     
     for (let i = 1; i <= number; i++) {
         factorial *= i;
     }
     return factorial;
+}
 
+function roundNumber(number, decimal) {
+    return Math.round(number * Math.pow(10, decimal)) / Math.pow(10, decimal);
 }
