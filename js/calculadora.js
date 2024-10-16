@@ -8,6 +8,7 @@ const btnSquareRoot = document.querySelector('#btnSquareRoot');
 
 const btnClear = document.querySelector('#btnClear');
 const btnDelete = document.querySelector('#btnDelete');
+const btnSign = document.querySelector('#btnSign')
 const btnDecimal = document.querySelector('#btnDecimal');
 const btnEquals = document.querySelector('#btnEquals');
 
@@ -23,6 +24,7 @@ writeResult();
 clearNumber();
 deleteNumber();
 pressOperationButton();
+pressSignButton();
 pressDecimalButton();
 pressEqualsButton();
 pressPercentageButton();
@@ -60,7 +62,7 @@ function clearNumber() {
 function deleteNumber() {
     btnDelete.addEventListener('click', () => {
         if (!reset) {
-            if (result.textContent != 0) {
+            if (result.textContent !== '0') {
                 result.textContent = result.textContent.substring(0, result.textContent.length - 1);
                 resultValue = parseFloat(result.textContent);
             }
@@ -93,6 +95,23 @@ function pressOperationButton() {
 
 }
 
+function pressSignButton() {
+    btnSign.addEventListener('click', () => {
+        if (parseFloat(result.textContent) != 0) {
+            resultValue = parseFloat(result.textContent);
+            resultValue *= -1;
+            result.textContent = resultValue;
+            alert('previous: ' + previousValue + ', result: ' + resultValue)
+            alert('sinaaal')
+        }
+
+        if (previous.textContent) {
+            previous.textContent = null;
+        }
+
+    });
+}
+
 function pressDecimalButton() {
     btnDecimal.addEventListener('click', () => {
         if (!result.textContent.includes('.')) {
@@ -108,7 +127,7 @@ function pressEqualsButton() {
             previous.textContent += `${resultValue} =`;
         } else if (previous.textContent.endsWith('=')) {
             previousValue = parseFloat(result.textContent);
-            previous.textContent = previous.textContent.replace(/(\d+\.?\d*) (\D)/, `${previousValue} $2`);
+            previous.textContent = previous.textContent.replace(/(\-?\d+\.?\d*) (\D)/, `${previousValue} $2`);
             performOperation(btnEquals);
         } else {
             performOperation(btnEquals);
