@@ -22,6 +22,8 @@ let resultValue = 0;
 
 let fontSize = 48;
 let reset = false;
+let hardReset = false;
+let blockOperations = false;
 
 const MAXIMUM_NUMBER_OF_DIGITS = 16;
 
@@ -70,8 +72,12 @@ function writeResult(number) {
     if (result.textContent !== '0' && !reset) {
         result.textContent += number.textContent;
     } else {
+        if (hardReset) {
+            previous.textContent = null;
+        }
         result.textContent = number.textContent;
         reset = false;
+        hardReset = false;
     }
     resultValue = parseFloat(result.textContent);
     console.log(result.textContent.length);
@@ -89,6 +95,7 @@ function clearNumber() {
     resultValue = 0;
     previous.textContent = null;
     previousValue = 0;
+    blockOperations = false;
 }
 
 function pressDeleteButton() {
@@ -114,15 +121,17 @@ function deleteNumber() {
 function pressOperationButton() {
     btnOperations.forEach((operation) => {
         operation.addEventListener('click', () => {
-            if (!previous.textContent) {
-                previous.textContent = `${resultValue} ${operation.textContent}`;
-            } else {
-                performOperation(operation);
-                resultValue = parseFloat(result.textContent);
-                previous.textContent = `${resultValue} ${operation.textContent}`;
+            if (!blockOperations) {
+                if (!previous.textContent) {
+                    previous.textContent = `${resultValue} ${operation.textContent}`;
+                } else {
+                    performOperation(operation);
+                    resultValue = parseFloat(result.textContent);
+                    previous.textContent = `${resultValue} ${operation.textContent}`;
+                }
+                previousValue = resultValue;
+                reset = true;
             }
-            previousValue = resultValue;
-            reset = true;
         });
     })
 
@@ -132,24 +141,24 @@ function pressOperationButton() {
 
 function pressSignButton() {
     btnSign.addEventListener('click', () => {
-        if (parseFloat(result.textContent) != 0) {
-            resultValue = parseFloat(result.textContent);
-            resultValue *= -1;
-            result.textContent = resultValue;
-            alert('previous: ' + previousValue + ', result: ' + resultValue)
-            alert('sinaaal')
-        }
+        if (!blockOperations) {
+            if (parseFloat(result.textContent) != 0) {
+                resultValue = parseFloat(result.textContent);
+                resultValue *= -1;
+                result.textContent = resultValue;
+            }
 
-        if (previous.textContent) {
-            previous.textContent = null;
+            if (previous.textContent) {
+                previous.textContent = null;
+            }
+            reset = true;
         }
-
     });
 }
 
 function pressDecimalButton() {
     btnDecimal.addEventListener('click', () => {
-        if (!result.textContent.includes('.')) {
+        if (!blockOperations && !result.textContent.includes('.')) {
             result.textContent += '.';
         }
     });
@@ -162,15 +171,18 @@ function pressEqualsButton() {
 }
 
 function performEqualsOperation() {
-    if (!previous.textContent) {
-        previous.textContent += `${resultValue} =`;
-    } else if (previous.textContent.endsWith('=')) {
-        previousValue = parseFloat(result.textContent);
-        previous.textContent = previous.textContent.replace(/(\-?\d+\.?\d*) (\D)/, `${previousValue} $2`);
-        performOperation(btnEquals);
-    } else {
-        performOperation(btnEquals);
-        previous.textContent += ` ${resultValue} =`;
+    if (!blockOperations) {
+        if (!previous.textContent) {
+            previous.textContent += `${resultValue} =`;
+        } else if (previous.textContent.endsWith('=')) {
+            previousValue = parseFloat(result.textContent);
+            previous.textContent = previous.textContent.replace(/(\-?\d+\.?\d*) (\D)/, `${previousValue} $2`);
+            performOperation(btnEquals);
+        } else {
+            performOperation(btnEquals);
+            previous.textContent += ` ${resultValue} =`;
+        }
+        reset = true;
     }
 }
 
@@ -184,7 +196,17 @@ function performOperation(btnId) {
     } else if (previous.textContent.includes('×')) {
         result.textContent = previousValue * resultValue;
     } else if (previous.textContent.includes('÷')) {
-        result.textContent = roundNumber(previousValue / resultValue, MAXIMUM_NUMBER_OF_DIGITS - Math.round(previousValue / resultValue).toString().length);
+        if (resultValue === 0 && previousValue === 0) {
+            result.textContent = 'Indeterminado';
+            hardReset = true;
+            blockOperations = true;
+        } else if (resultValue === 0) {
+            result.textContent = 'Indefinido';
+            hardReset = true;
+            blockOperations = true;
+        } else {
+            result.textContent = roundNumber(previousValue / resultValue, MAXIMUM_NUMBER_OF_DIGITS - Math.round(previousValue / resultValue).toString().length);
+        }
     } else if (previous.textContent.includes('%')) {
         performPercentageOperation();
     } else if (previous.textContent.includes('!')) {
@@ -203,11 +225,14 @@ function pressPercentageButton() {
 }
 
 function performPercentageOperation() {
-    previousValue = resultValue;
-    previous.textContent = `${previousValue}% =`;
-    resultValue /= 100;
-    result.textContent = resultValue;
-    reset = true;
+    if (!blockOperations) {
+        previousValue = resultValue;
+        previous.textContent = `${previousValue}% =`;
+        resultValue /= 100;
+        result.textContent = resultValue;
+        reset = true;
+        hardReset = true;
+    }
 }
 
 function pressFactorialButton() {
@@ -217,11 +242,14 @@ function pressFactorialButton() {
 }
 
 function performFactorialOperation() {
-    previousValue = resultValue;
-    previous.textContent = `${previousValue}! =`;
-    resultValue = calculateFactorial(resultValue);
-    result.textContent = resultValue;
-    reset = true;
+    if (!blockOperations) {
+        previousValue = resultValue;
+        previous.textContent = `${previousValue}! =`;
+        resultValue = calculateFactorial(resultValue);
+        result.textContent = resultValue;
+        reset = true;
+        hardReset = true;
+    }
 }
 
 function pressSquareButton() {
@@ -231,11 +259,14 @@ function pressSquareButton() {
 }
 
 function performSquareOperation() {
-    previousValue = resultValue;
-    previous.textContent = `${previousValue}² =`;
-    resultValue *= resultValue;
-    result.textContent = resultValue;
-    reset = true;
+    if (!blockOperations) {
+        previousValue = resultValue;
+        previous.textContent = `${previousValue}² =`;
+        resultValue *= resultValue;
+        result.textContent = resultValue;
+        reset = true;
+        hardReset = true;
+    }
 }
 
 function pressSquareRootButton() {
@@ -245,11 +276,14 @@ function pressSquareRootButton() {
 }
 
 function performSquareRootOperation() {
-    previousValue = resultValue;
-    previous.textContent = `√(${previousValue}) =`;
-    resultValue = Math.sqrt(resultValue);
-    result.textContent = resultValue;
-    reset = true;
+    if (!blockOperations) {
+        previousValue = resultValue;
+        previous.textContent = `√(${previousValue}) =`;
+        resultValue = Math.sqrt(resultValue);
+        result.textContent = resultValue;
+        reset = true;
+        hardReset = true;
+    }
 }
 
 function calculateFactorial(number) { 
