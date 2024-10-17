@@ -8,6 +8,7 @@ const btnFactorial = document.querySelector('#btnFactorial');
 const btnSquare = document.querySelector('#btnSquare');
 const btnSquareRoot = document.querySelector('#btnSquareRoot');
 
+const btnClearEntry = document.querySelector('#btnClearEntry');
 const btnClear = document.querySelector('#btnClear');
 const btnDelete = document.querySelector('#btnDelete');
 const btnSign = document.querySelector('#btnSign')
@@ -29,6 +30,7 @@ const MAXIMUM_NUMBER_OF_DIGITS = 10;
 
 executeKeyCommands();
 formatScreen();
+pressClearEntryButton();
 pressClearButton();
 pressDeleteButton();
 pressOperationButton();
@@ -95,6 +97,18 @@ function clearNumber() {
     resultValue = 0;
     previous.textContent = null;
     previousValue = 0;
+    blockOperations = false;
+}
+
+function pressClearEntryButton() {
+    btnClearEntry.addEventListener('click', () => {
+        clearEntry();
+    });
+}
+
+function clearEntry() {
+    result.textContent = '0';
+    resultValue = 0;
     blockOperations = false;
 }
 
