@@ -25,7 +25,7 @@ let reset = false;
 let hardReset = false;
 let blockOperations = false;
 
-const MAXIMUM_NUMBER_OF_DIGITS = 16;
+const MAXIMUM_NUMBER_OF_DIGITS = 10;
 
 executeKeyCommands();
 formatScreen();
@@ -62,7 +62,7 @@ function formatScreen() {
     btnNumbers.forEach((number) => {
         number.addEventListener('click', () => {
             if (result.textContent.length < MAXIMUM_NUMBER_OF_DIGITS) {
-                writeResult(number);
+                writeResult(number.textContent);
             }
         });
     });
@@ -70,12 +70,12 @@ function formatScreen() {
 
 function writeResult(number) {
     if (result.textContent !== '0' && !reset) {
-        result.textContent += number.textContent;
+        result.textContent += number;
     } else {
         if (hardReset) {
             previous.textContent = null;
         }
-        result.textContent = number.textContent;
+        result.textContent = number;
         reset = false;
         hardReset = false;
     }
@@ -190,18 +190,18 @@ function performOperation(btnId) {
     if (!previous.textContent) {
         previous.textContent = `${resultValue} ${btnId.textContent}`;
     } else if (previous.textContent.includes('+')) {
-        result.textContent = previousValue + resultValue;
+        result.textContent = (Math.round(previousValue + resultValue)).toString().length > MAXIMUM_NUMBER_OF_DIGITS ? 'Overflow' : previousValue + resultValue;
     } else if (previous.textContent.includes('-')) {
-        result.textContent = previousValue - resultValue;
+        result.textContent = (Math.round(previousValue - resultValue)).toString().length > MAXIMUM_NUMBER_OF_DIGITS ? 'Overflow' : previousValue - resultValue;
     } else if (previous.textContent.includes('×')) {
-        result.textContent = previousValue * resultValue;
+        result.textContent = (Math.round(previousValue * resultValue)).toString().length > MAXIMUM_NUMBER_OF_DIGITS ? 'Overflow' : previousValue * resultValue;
     } else if (previous.textContent.includes('÷')) {
         if (resultValue === 0 && previousValue === 0) {
-            result.textContent = 'Indeterminado';
+            result.textContent = 'Indeterminate';
             hardReset = true;
             blockOperations = true;
         } else if (resultValue === 0) {
-            result.textContent = 'Indefinido';
+            result.textContent = 'Undefined';
             hardReset = true;
             blockOperations = true;
         } else {
@@ -216,6 +216,12 @@ function performOperation(btnId) {
     } else if (previous.textContent.includes('√')) {
         performSquareRootOperation();
     }
+
+    if (result.textContent == 'Overflow') {
+        hardReset = true;
+        blockOperations = true;
+    }
+
 }
 
 function pressPercentageButton() {
@@ -246,9 +252,14 @@ function performFactorialOperation() {
         previousValue = resultValue;
         previous.textContent = `${previousValue}! =`;
         resultValue = calculateFactorial(resultValue);
-        result.textContent = resultValue;
+        result.textContent = resultValue === -1 ? 'Overflow' : resultValue;
         reset = true;
         hardReset = true;
+
+        if (result.textContent == 'Overflow') {
+            blockOperations = true;
+        }
+
     }
 }
 
@@ -279,7 +290,7 @@ function performSquareRootOperation() {
     if (!blockOperations) {
         previousValue = resultValue;
         previous.textContent = `√(${previousValue}) =`;
-        resultValue = Math.sqrt(resultValue);
+        resultValue = roundNumber(Math.sqrt(resultValue), MAXIMUM_NUMBER_OF_DIGITS - Math.round(Math.sqrt(resultValue)).toString().length);
         result.textContent = resultValue;
         reset = true;
         hardReset = true;
@@ -287,8 +298,17 @@ function performSquareRootOperation() {
 }
 
 function calculateFactorial(number) { 
-    let factorial = 1;
     
+    if (number < 0) {
+        number *= -1;
+    }
+    
+    if (number > 18) {
+        return -1;
+    }
+    
+    let factorial = 1;
+
     for (let i = 1; i <= number; i++) {
         factorial *= i;
     }
