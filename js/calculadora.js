@@ -26,10 +26,11 @@ let reset = false;
 let hardReset = false;
 let blockOperations = false;
 
-const MAXIMUM_NUMBER_OF_DIGITS = 10;
+const MAXIMUM_NUMBER_OF_DIGITS = 16;
 
 executeKeyCommands();
-formatScreen();
+pressButton();
+pressNumberButton();
 pressClearEntryButton();
 pressClearButton();
 pressDeleteButton();
@@ -46,6 +47,7 @@ function executeKeyCommands() {
     addEventListener('keydown', (event) => {
         event.preventDefault();
 
+        formatScreen();
         switch (event.key) {
             case 'Escape':
                 clearNumber();
@@ -60,10 +62,48 @@ function executeKeyCommands() {
     });
 }
 
+function pressButton() {
+    buttons.forEach((button => {
+        button.addEventListener('click', () => {
+            formatScreen();
+        });
+    }))
+}
+
 function formatScreen() {
+    switch (result.textContent.length + 1) {
+        case 10:
+            fontSize = 44;
+            break;
+        case 11:
+            fontSize = 40.5;
+            break;
+        case 12:
+            fontSize = 37.5;
+            break;
+        case 13:
+            fontSize = 35;
+            break;
+        case 14:
+            fontSize = 32.5;
+            break;
+        case 15:
+            fontSize = 30;
+            break;
+        case 16:
+            fontSize = 30;
+            break;
+        default:
+            fontSize = 48;
+            break;
+    }
+    result.style.fontSize = `${fontSize}px`;
+}
+
+function pressNumberButton() {
     btnNumbers.forEach((number) => {
         number.addEventListener('click', () => {
-            if (result.textContent.length < MAXIMUM_NUMBER_OF_DIGITS) {
+            if (result.textContent.length < MAXIMUM_NUMBER_OF_DIGITS || reset) {
                 writeResult(number.textContent);
             }
         });
@@ -253,7 +293,7 @@ function performPercentageOperation() {
 
 function pressFactorialButton() {
     btnFactorial.addEventListener('click', () => {
-       performFactorialOperation(); 
+        performFactorialOperation(); 
     });
 }
 
@@ -305,8 +345,14 @@ function performSquareRootOperation() {
     if (!blockOperations) {
         previousValue = resultValue;
         previous.textContent = `√(${previousValue}) =`;
-        resultValue = roundNumber(Math.sqrt(resultValue), MAXIMUM_NUMBER_OF_DIGITS - Math.round(Math.sqrt(resultValue)).toString().length);
-        result.textContent = resultValue;
+        if (previousValue < 0) {
+            resultValue = 0;
+            result.textContent = 'Invalid';
+            blockOperations = true;
+        } else {
+            resultValue = roundNumber(Math.sqrt(resultValue), MAXIMUM_NUMBER_OF_DIGITS - Math.round(Math.sqrt(resultValue)).toString().length);
+            result.textContent = resultValue;
+        }
         reset = true;
         hardReset = true;
     }
