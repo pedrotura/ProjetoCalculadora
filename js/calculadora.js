@@ -29,7 +29,6 @@ let blockOperations = false;
 const MAXIMUM_NUMBER_OF_DIGITS = 16;
 
 executeKeyCommands();
-pressButton();
 pressNumberButton();
 pressClearEntryButton();
 pressClearButton();
@@ -42,12 +41,12 @@ pressPercentageButton();
 pressFactorialButton();
 pressSquareButton();
 pressSquareRootButton();
+pressButton();
 
 function executeKeyCommands() {
     addEventListener('keydown', (event) => {
         event.preventDefault();
 
-        formatScreen();
         switch (event.key) {
             case 'Escape':
                 clearNumber();
@@ -59,6 +58,7 @@ function executeKeyCommands() {
                 performEqualsOperation();
                 break;
         }
+        formatScreen();
     });
 }
 
@@ -71,27 +71,30 @@ function pressButton() {
 }
 
 function formatScreen() {
-    switch (result.textContent.length + 1) {
-        case 10:
+    switch (result.textContent.length) {
+        case 11:
             fontSize = 44;
             break;
-        case 11:
+        case 12:
             fontSize = 40.5;
             break;
-        case 12:
+        case 13:
             fontSize = 37.5;
             break;
-        case 13:
+        case 14:
             fontSize = 35;
             break;
-        case 14:
+        case 15:
             fontSize = 32.5;
             break;
-        case 15:
+        case 16:
+            fontSize = 30.5;
+            break;
+        case 17:
             fontSize = 30;
             break;
-        case 16:
-            fontSize = 30;
+        case 18:
+            fontSize = 29;
             break;
         default:
             fontSize = 48;
