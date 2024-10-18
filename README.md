@@ -20,7 +20,7 @@ The architecture is fairly simple, but it gets the job done:
 ![Static Badge](https://img.shields.io/badge/JS-%23323230?style=for-the-badge&logo=javascript&logoColor=%23f0db4e)
 
 ## How to view the project
-If you want to test out all the features my calculator has to offer, you can download the repository `pedrotura/ProjetoCalculadora` or simply [click here.](https://pedrotura.github.io/AluraBooks/)
+If you want to test out all the features my calculator has to offer, you can download the repository `pedrotura/ProjetoCalculadora` or simply [click here.](https://pedrotura.github.io/ProjetoCalculadora/)
 
 ## Developer
 | [<img loading="lazy" src="https://i.imgur.com/mnCcjBW.jpeg" alt="Pedro Tura" width=185></img><br><sub>Pedro Henrique Gonçalves Tura</sub>](https://www.github.com/pedrotura) |
