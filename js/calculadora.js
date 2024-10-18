@@ -82,8 +82,6 @@ function writeResult(number) {
         hardReset = false;
     }
     resultValue = parseFloat(result.textContent);
-    console.log(result.textContent.length);
-    console.log(resultValue);
 }
 
 function pressClearButton() {
@@ -139,7 +137,9 @@ function pressOperationButton() {
                 if (!previous.textContent) {
                     previous.textContent = `${resultValue} ${operation.textContent}`;
                 } else {
-                    performOperation(operation);
+                    if (!reset) {
+                        performOperation(operation);
+                    }
                     resultValue = parseFloat(result.textContent);
                     previous.textContent = `${resultValue} ${operation.textContent}`;
                 }
@@ -147,10 +147,7 @@ function pressOperationButton() {
                 reset = true;
             }
         });
-    })
-
-    alert('previous: ' + previousValue + ', result: ' + resultValue)
-
+    });
 }
 
 function pressSignButton() {
@@ -165,7 +162,6 @@ function pressSignButton() {
             if (previous.textContent) {
                 previous.textContent = null;
             }
-            reset = true;
         }
     });
 }
@@ -205,8 +201,6 @@ function performOperation(btnId) {
         previous.textContent = `${resultValue} ${btnId.textContent}`;
     } else if (previous.textContent.includes('+')) {
         result.textContent = (Math.round(previousValue + resultValue)).toString().length > MAXIMUM_NUMBER_OF_DIGITS ? 'Overflow' : previousValue + resultValue;
-    } else if (previous.textContent.includes('-')) {
-        result.textContent = (Math.round(previousValue - resultValue)).toString().length > MAXIMUM_NUMBER_OF_DIGITS ? 'Overflow' : previousValue - resultValue;
     } else if (previous.textContent.includes('×')) {
         result.textContent = (Math.round(previousValue * resultValue)).toString().length > MAXIMUM_NUMBER_OF_DIGITS ? 'Overflow' : previousValue * resultValue;
     } else if (previous.textContent.includes('÷')) {
@@ -229,6 +223,8 @@ function performOperation(btnId) {
         performSquareOperation();
     } else if (previous.textContent.includes('√')) {
         performSquareRootOperation();
+    } else if (previous.textContent.includes('-')) {
+        result.textContent = (Math.round(previousValue - resultValue)).toString().length > MAXIMUM_NUMBER_OF_DIGITS ? 'Overflow' : previousValue - resultValue;
     }
 
     if (result.textContent == 'Overflow') {
@@ -248,7 +244,7 @@ function performPercentageOperation() {
     if (!blockOperations) {
         previousValue = resultValue;
         previous.textContent = `${previousValue}% =`;
-        resultValue /= 100;
+        resultValue = roundNumber(resultValue / 100, MAXIMUM_NUMBER_OF_DIGITS - Math.round(resultValue / 100).toString().length);
         result.textContent = resultValue;
         reset = true;
         hardReset = true;
@@ -287,10 +283,15 @@ function performSquareOperation() {
     if (!blockOperations) {
         previousValue = resultValue;
         previous.textContent = `${previousValue}² =`;
-        resultValue *= resultValue;
+        resultValue = (Math.round(resultValue ** 2)).toString().length > MAXIMUM_NUMBER_OF_DIGITS ? 'Overflow' : resultValue ** 2;
         result.textContent = resultValue;
         reset = true;
         hardReset = true;
+
+        if (result.textContent == 'Overflow') {
+            blockOperations = true;
+        }
+
     }
 }
 
