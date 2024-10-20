@@ -47,16 +47,18 @@ function executeKeyCommands() {
     addEventListener('keydown', (event) => {
         event.preventDefault();
 
-        switch (event.key) {
-            case 'Escape':
-                clearNumber();
-                break;
-            case 'Backspace':
-                deleteNumber();
-                break;
-            case 'Enter':
-                performEqualsOperation();
-                break;
+        if (/\d/.test(parseInt(event.key))) {
+            if (result.textContent.length < MAXIMUM_NUMBER_OF_DIGITS || reset) {
+                writeResult(event.key);
+            }
+        } else if (event.key === '.') {
+            performDecimalOperation();
+        } else if (event.key === 'Escape') {
+            clearNumber();
+        } else if (event.key === 'Backspace') {
+            deleteNumber();
+        } else if (event.key === 'Enter') {
+            performEqualsOperation();
         }
         formatScreen();
     });
@@ -188,6 +190,7 @@ function pressOperationButton() {
                 }
                 previousValue = resultValue;
                 reset = true;
+                hardReset = false;
             }
         });
     });
@@ -211,10 +214,14 @@ function pressSignButton() {
 
 function pressDecimalButton() {
     btnDecimal.addEventListener('click', () => {
-        if (!blockOperations && !result.textContent.includes('.')) {
-            result.textContent += '.';
-        }
+        performDecimalOperation();
     });
+}
+
+function performDecimalOperation() {
+    if (!blockOperations && !result.textContent.includes('.')) {
+        result.textContent += '.';
+    }
 }
 
 function pressEqualsButton() {
@@ -229,7 +236,7 @@ function performEqualsOperation() {
             previous.textContent += `${resultValue} =`;
         } else if (previous.textContent.endsWith('=')) {
             previousValue = parseFloat(result.textContent);
-            previous.textContent = previous.textContent.replace(/(\-?\d+\.?\d*) (\D)/, `${previousValue} $2`);
+            previous.textContent = previous.textContent.replace(/(\-?\d+\.?\d*e?[\+\-]?\d*) (\D)/, `${previousValue} $2`);
             performOperation(btnEquals);
         } else {
             performOperation(btnEquals);
@@ -274,7 +281,6 @@ function performOperation(btnId) {
         hardReset = true;
         blockOperations = true;
     }
-
 }
 
 function pressPercentageButton() {
