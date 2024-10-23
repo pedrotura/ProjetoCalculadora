@@ -32,8 +32,8 @@ body {
 }
 
 .calculator {
-    width: 22.5%;
-    height: 80%;
+    width: 19.5em;
+    height: 32em;
     border-radius: 0.5em;
     background-color: var(--calculator-color);
 }
@@ -48,21 +48,21 @@ body {
 
 .calculator-screen p {
     text-align: end;
-    margin-right: 15px;
+    margin-right: 1rem;
 }
 
 .calculator-previous {
     color: var(--equals-color);
-    font-size: 14px;
+    font-size: 0.875rem;
     user-select: none;
     margin-bottom: 5px;
 }
 
 .calculator-result {
     color: var(--text-color);
-    font-size: 48px;
+    font-size: 3rem;
     font-weight: 600;
-    margin-bottom: 10px;
+    margin-bottom: 0.625rem;
 }
 
 .calculator-wrapper {
