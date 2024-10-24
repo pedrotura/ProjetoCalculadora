@@ -198,18 +198,22 @@ function pressOperationButton() {
 
 function pressSignButton() {
     btnSign.addEventListener('click', () => {
-        if (!blockOperations) {
-            if (parseFloat(result.textContent) != 0) {
-                resultValue = parseFloat(result.textContent);
-                resultValue *= -1;
-                result.textContent = resultValue;
-            }
-
-            if (previous.textContent) {
-                previous.textContent = null;
-            }
-        }
+        performSignOperation();
     });
+}
+
+function performSignOperation() {
+    if (!blockOperations) {
+        if (parseFloat(result.textContent) != 0) {
+            resultValue = parseFloat(result.textContent);
+            resultValue *= -1;
+            result.textContent = resultValue;
+        }
+
+        if (previous.textContent.endsWith('=')) {
+            previous.textContent = null;
+        }
+    }
 }
 
 function pressDecimalButton() {
@@ -291,6 +295,7 @@ function pressPercentageButton() {
 
 function performPercentageOperation() {
     if (!blockOperations) {
+        resultValue = parseFloat(result.textContent);
         previousValue = resultValue;
         previous.textContent = `${previousValue}% =`;
         resultValue = roundNumber(resultValue / 100, MAXIMUM_NUMBER_OF_DIGITS - Math.round(resultValue / 100).toString().length);
@@ -308,6 +313,7 @@ function pressFactorialButton() {
 
 function performFactorialOperation() {
     if (!blockOperations) {
+        resultValue = parseFloat(result.textContent);
         previousValue = resultValue;
         previous.textContent = `${previousValue}! =`;
         resultValue = calculateFactorial(resultValue);
@@ -330,17 +336,23 @@ function pressSquareButton() {
 
 function performSquareOperation() {
     if (!blockOperations) {
+        resultValue = parseFloat(result.textContent);
         previousValue = resultValue;
         previous.textContent = `${previousValue}² =`;
-        resultValue = (Math.round(resultValue ** 2)).toString().length > MAXIMUM_NUMBER_OF_DIGITS ? 'Overflow' : resultValue ** 2;
-        result.textContent = resultValue;
+        
+        if (Math.round(resultValue ** 2).toString().length > MAXIMUM_NUMBER_OF_DIGITS) {
+            resultValue = 0;
+            result.textContent = 'Overflow';
+        } else {
+            resultValue = roundNumber(resultValue ** 2, MAXIMUM_NUMBER_OF_DIGITS - Math.round(resultValue ** 2).toString().length);
+            result.textContent = resultValue;
+        }
         reset = true;
         hardReset = true;
 
         if (result.textContent == 'Overflow') {
             blockOperations = true;
         }
-
     }
 }
 
@@ -352,8 +364,10 @@ function pressSquareRootButton() {
 
 function performSquareRootOperation() {
     if (!blockOperations) {
+        resultValue = parseFloat(result.textContent);
         previousValue = resultValue;
         previous.textContent = `√(${previousValue}) =`;
+
         if (previousValue < 0) {
             resultValue = 0;
             result.textContent = 'Invalid';
@@ -368,7 +382,6 @@ function performSquareRootOperation() {
 }
 
 function calculateFactorial(number) { 
-    
     if (number < 0) {
         number *= -1;
     }
