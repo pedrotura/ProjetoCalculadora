@@ -51,6 +51,12 @@ function executeKeyCommands() {
             if (result.textContent.length < MAXIMUM_NUMBER_OF_DIGITS || reset) {
                 writeResult(event.key);
             }
+        } else if (/[\+-]/.test(event.key)) {
+            formatOperation(event.key);
+        } else if (event.key === '*') {
+            formatOperation('×')
+        } else if (event.key === '/') {
+            formatOperation('÷');
         } else if (event.key === '.') {
             performDecimalOperation();
         } else if (event.key === 'Escape') {
@@ -178,22 +184,26 @@ function deleteNumber() {
 function pressOperationButton() {
     btnOperations.forEach((operation) => {
         operation.addEventListener('click', () => {
-            if (!blockOperations) {
-                if (!previous.textContent) {
-                    previous.textContent = `${resultValue} ${operation.textContent}`;
-                } else {
-                    if (!reset) {
-                        performOperation(operation);
-                    }
-                    resultValue = parseFloat(result.textContent);
-                    previous.textContent = `${resultValue} ${operation.textContent}`;
-                }
-                previousValue = resultValue;
-                reset = true;
-                hardReset = false;
-            }
+            formatOperation(operation.textContent);
         });
     });
+}
+
+function formatOperation(operation) {
+    if (!blockOperations) {
+        if (!previous.textContent) {
+            previous.textContent = `${resultValue} ${operation}`;
+        } else {
+            if (!reset) {
+                performOperation(operation);
+            }
+            resultValue = parseFloat(result.textContent);
+            previous.textContent = `${resultValue} ${operation}`;
+        }
+        previousValue = resultValue;
+        reset = true;
+        hardReset = false;
+    }
 }
 
 function pressSignButton() {
@@ -241,18 +251,18 @@ function performEqualsOperation() {
         } else if (previous.textContent.endsWith('=')) {
             previousValue = parseFloat(result.textContent);
             previous.textContent = previous.textContent.replace(/(\-?\d+\.?\d*e?[\+\-]?\d*) (\D)/, `${previousValue} $2`);
-            performOperation(btnEquals);
+            performOperation(btnEquals.textContent);
         } else {
-            performOperation(btnEquals);
+            performOperation(btnEquals.textContent);
             previous.textContent += ` ${resultValue} =`;
         }
         reset = true;
     }
 }
 
-function performOperation(btnId) {
+function performOperation(operation) {
     if (!previous.textContent) {
-        previous.textContent = `${resultValue} ${btnId.textContent}`;
+        previous.textContent = `${resultValue} ${operation}`;
     } else if (previous.textContent.includes('+')) {
         result.textContent = (Math.round(previousValue + resultValue)).toString().length > MAXIMUM_NUMBER_OF_DIGITS ? 'Overflow' : previousValue + resultValue;
     } else if (previous.textContent.includes('×')) {
