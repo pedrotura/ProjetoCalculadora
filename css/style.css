@@ -53,15 +53,15 @@ body {
 
 .calculator-previous {
     color: var(--equals-color);
-    font-size: 0.875rem;
+    font-size: 1rem;
     user-select: none;
-    margin-bottom: 5px;
+    margin-bottom: 0.3rem;
 }
 
 .calculator-result {
     color: var(--text-color);
     font-size: 3rem;
-    font-weight: 600;
+    font-weight: 700;
     margin-bottom: 0.625rem;
 }
 
@@ -93,7 +93,7 @@ body {
 .calculator-button button {
     width: 100%;
     height: 100%;
-    font-size: 17px;
+    font-size: 1rem;
     border: none;
     border-radius: 0.2em;
     user-select: none;

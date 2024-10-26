@@ -57,6 +57,10 @@ function executeKeyCommands() {
             formatOperation('×')
         } else if (event.key === '/') {
             formatOperation('÷');
+        } else if (event.key == '%') {
+            performPercentageOperation();
+        } else if (event.key === '!') {
+            performFactorialOperation();
         } else if (event.key === '.') {
             performDecimalOperation();
         } else if (event.key === 'Escape') {
@@ -291,7 +295,7 @@ function performOperation(operation) {
         result.textContent = (Math.round(previousValue - resultValue)).toString().length > MAXIMUM_NUMBER_OF_DIGITS ? 'Overflow' : previousValue - resultValue;
     }
 
-    if (result.textContent == 'Overflow') {
+    if (result.textContent === 'Overflow') {
         hardReset = true;
         blockOperations = true;
     }
@@ -327,14 +331,14 @@ function performFactorialOperation() {
         previousValue = resultValue;
         previous.textContent = `${previousValue}! =`;
         resultValue = calculateFactorial(resultValue);
-        result.textContent = resultValue === -1 ? 'Overflow' : resultValue;
-        reset = true;
-        hardReset = true;
+        result.textContent = resultValue;
 
-        if (result.textContent == 'Overflow') {
+        if (result.textContent === 'Overflow' || result.textContent === 'Invalid') {
             blockOperations = true;
         }
 
+        reset = true;
+        hardReset = true;
     }
 }
 
@@ -360,7 +364,7 @@ function performSquareOperation() {
         reset = true;
         hardReset = true;
 
-        if (result.textContent == 'Overflow') {
+        if (result.textContent === 'Overflow') {
             blockOperations = true;
         }
     }
@@ -392,12 +396,12 @@ function performSquareRootOperation() {
 }
 
 function calculateFactorial(number) { 
-    if (number < 0) {
-        number *= -1;
+    if (number < 0 || !Number.isInteger(number)) {
+        return 'Invalid';
     }
     
     if (number > 18) {
-        return -1;
+        return 'Overflow';
     }
     
     let factorial = 1;
